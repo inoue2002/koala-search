@@ -4,7 +4,7 @@ Amazon・楽天ブックスの商品ページから、関西大学図書館の�
 
 ## サンプル画像
 
-![サンプル画像](img/sample.jpg)
+![サンプル画像](https://i.gyazo.com/38265da37e0def8c6961e8ebb9a428e8.gif)
 
 ## 機能
 
