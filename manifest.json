@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "図書館検索",
+  "version": "1.0",
+  "description": "ISBNから図書館の蔵書を検索します",
+  "permissions": ["activeTab"],
+  "host_permissions": ["https://www.lib.kansai-u.ac.jp/*"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
