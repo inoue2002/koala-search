@@ -3,9 +3,15 @@
   "name": "図書館検索",
   "version": "1.0",
   "description": "ISBNから図書館の蔵書を検索します",
-  "permissions": ["activeTab"],
+  "permissions": ["activeTab", "storage"],
   "host_permissions": ["https://www.lib.kansai-u.ac.jp/*"],
   "action": {
     "default_popup": "popup.html"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.amazon.co.jp/*"],
+      "js": ["content.js"]
+    }
+  ]
 }
