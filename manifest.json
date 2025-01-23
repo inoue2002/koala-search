@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "図書館検索",
+  "name": "関大図書館検索",
   "version": "1.0",
-  "description": "ISBNから図書館の蔵書を検索します",
+  "description": "ISBNから関大図書館の蔵書を検索します",
   "permissions": ["activeTab", "storage", "scripting", "webRequest", "webRequestBlocking", "cookies"],
-  "host_permissions": ["https://www.lib.kansai-u.ac.jp/*", "https://www.amazon.co.jp/*", "*://*.kansai-u.ac.jp/*"],
+  "host_permissions": [
+    "https://www.lib.kansai-u.ac.jp/*",
+    "https://www.amazon.co.jp/*",
+    "https://books.rakuten.co.jp/*",
+    "*://*.kansai-u.ac.jp/*"
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
@@ -14,7 +19,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.amazon.co.jp/*"],
+      "matches": ["https://www.amazon.co.jp/*", "https://books.rakuten.co.jp/*"],
       "js": ["searchBook.js", "content.js"]
     }
   ]
