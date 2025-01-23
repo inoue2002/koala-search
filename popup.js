@@ -97,32 +97,158 @@ async function searchBook(isbn) {
     // 情報が何も取得できなかった場合
     if (!basicInfo && Object.keys(bookDetails).length === 0 && !holdingInfo) {
       resultDiv.innerHTML = '該当する本が見つかりませんでした';
+      // アイコンを未所蔵に設定
+      chrome.action.setIcon({
+        path: {
+          "16": "icons/book-unavailable.svg",
+          "48": "icons/book-unavailable.svg",
+          "128": "icons/book-unavailable.svg"
+        }
+      });
       return;
     }
 
     displayHtml += '</div>';
     resultDiv.innerHTML = displayHtml;
     
+    // アイコンを所蔵ありに設定
+    chrome.action.setIcon({
+      path: {
+        "16": "icons/book-available.svg",
+        "48": "icons/book-available.svg",
+        "128": "icons/book-available.svg"
+      }
+    });
+    
   } catch (error) {
     resultDiv.innerHTML = 'エラーが発生しました: ' + error.message;
+    // エラー時はアイコンを未所蔵に設定
+    chrome.action.setIcon({
+      path: {
+        "16": "icons/book-unavailable.svg",
+        "48": "icons/book-unavailable.svg",
+        "128": "icons/book-unavailable.svg"
+      }
+    });
   }
 }
 
 // ポップアップが開かれた時に実行
 document.addEventListener('DOMContentLoaded', () => {
-  // 保存されたISBNを読み込んで入力欄に設定し、自動検索を実行
-  chrome.storage.local.get(['isbn'], (result) => {
+  const resultDiv = document.getElementById('result');
+
+  // 保存されたISBNと検索結果を読み込む
+  chrome.storage.local.get(['isbn', 'searchResult'], async (result) => {
     if (result.isbn) {
       const isbnInput = document.getElementById('isbn');
       isbnInput.value = result.isbn;
-      // 自動検索を実行
-      searchBook(result.isbn);
+      
+      // 保存された検索結果がある場合はそれを表示
+      if (result.searchResult) {
+        displaySearchResult(result.searchResult);
+      } else {
+        // 保存された結果がない場合は新しく検索
+        try {
+          resultDiv.innerHTML = '検索中...';
+          const searchResult = await searchBook(result.isbn);
+          displaySearchResult(searchResult);
+        } catch (error) {
+          resultDiv.innerHTML = 'エラーが発生しました: ' + error.message;
+        }
+      }
     }
   });
 
   // 検索ボタンのクリックイベント
-  document.getElementById('search').addEventListener('click', () => {
+  document.getElementById('search').addEventListener('click', async () => {
     const isbn = document.getElementById('isbn').value;
-    searchBook(isbn);
+    if (!isbn) {
+      resultDiv.innerHTML = 'ISBNを入力してください';
+      return;
+    }
+
+    try {
+      resultDiv.innerHTML = '検索中...';
+      const searchResult = await searchBook(isbn);
+      displaySearchResult(searchResult);
+    } catch (error) {
+      resultDiv.innerHTML = 'エラーが発生しました: ' + error.message;
+    }
   });
-}); 
+});
+
+// 検索結果を表示する関数
+function displaySearchResult(result) {
+  const resultDiv = document.getElementById('result');
+  let displayHtml = '<div class="book-info">';
+  
+  // 基本情報の表示
+  if (result.basicInfo) {
+    displayHtml += '<h3>基本情報</h3>';
+    displayHtml += `<p>${result.basicInfo}</p>`;
+  }
+
+  // 詳細情報の表示（必要な項目のみ）
+  if (Object.keys(result.bookDetails).length > 0) {
+    displayHtml += '<h3>詳細情報</h3>';
+    const requiredFields = ['標題および責任表示', 'ISBN', '出版・頒布事項'];
+    for (const field of requiredFields) {
+      if (result.bookDetails[field]) {
+        displayHtml += `<p><strong>${field}:</strong> ${result.bookDetails[field]}</p>`;
+      }
+    }
+  }
+
+  // 所蔵情報の表示
+  if (result.holdingInfo) {
+    displayHtml += '<h3>所蔵情報</h3>';
+    if (typeof result.holdingInfo === 'string') {
+      // ストレージから読み込んだ場合はHTML文字列
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = result.holdingInfo;
+      const rows = tempDiv.querySelectorAll('tr');
+      if (rows.length > 1) {
+        const cells = rows[1].querySelectorAll('td');
+        if (cells.length > 0) {
+          displayHtml += '<div class="holding-item">';
+          const requiredLabels = ['所蔵館', '配置場所', '請求記号', '資料ID', '状態'];
+          const labelIndexes = [2, 3, 5, 6, 9];
+          labelIndexes.forEach((index, i) => {
+            const text = cells[index]?.textContent.trim();
+            if (text && requiredLabels[i]) {
+              displayHtml += `<p><strong>${requiredLabels[i]}:</strong> ${text}</p>`;
+            }
+          });
+          displayHtml += '</div>';
+        }
+      }
+    } else {
+      // 直接DOMElementの場合
+      const rows = result.holdingInfo.querySelectorAll('tr');
+      if (rows.length > 1) {
+        const cells = rows[1].querySelectorAll('td');
+        if (cells.length > 0) {
+          displayHtml += '<div class="holding-item">';
+          const requiredLabels = ['所蔵館', '配置場所', '請求記号', '資料ID', '状態'];
+          const labelIndexes = [2, 3, 5, 6, 9];
+          labelIndexes.forEach((index, i) => {
+            const text = cells[index]?.textContent.trim();
+            if (text && requiredLabels[i]) {
+              displayHtml += `<p><strong>${requiredLabels[i]}:</strong> ${text}</p>`;
+            }
+          });
+          displayHtml += '</div>';
+        }
+      }
+    }
+  }
+
+  // 情報が何も取得できなかった場合
+  if (!result.basicInfo && Object.keys(result.bookDetails).length === 0 && !result.holdingInfo) {
+    resultDiv.innerHTML = '該当する本が見つかりませんでした';
+    return;
+  }
+
+  displayHtml += '</div>';
+  resultDiv.innerHTML = displayHtml;
+} 
