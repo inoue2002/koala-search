@@ -1,3 +1,5 @@
+[![Chrome ウェブストアからインストール](StoreLogo.png)](https://chromewebstore.google.com/detail/%E9%96%A2%E5%A4%A7%E5%9B%B3%E6%9B%B8%E9%A4%A8%E6%A4%9C%E7%B4%A2/lachkpnbdncfhjpajficgejkpnkdiljp?hl=ja)
+
 # 関大図書館検索 Chrome 拡張機能
 
 Amazon・楽天ブックスの商品ページから、関西大学図書館の蔵書を簡単に検索できる Chrome 拡張機能です。
@@ -23,7 +25,7 @@ Amazon・楽天ブックスの商品ページから、関西大学図書館の�
 
 ## インストール方法
 
-1. Chrome ウェブストアから「関大図書館検索」を検索
+1. [Chrome ウェブストア](https://chromewebstore.google.com/detail/%E9%96%A2%E5%A4%A7%E5%9B%B3%E6%9B%B8%E9%A4%A8%E6%A4%9C%E7%B4%A2/lachkpnbdncfhjpajficgejkpnkdiljp?hl=ja)にアクセス
 2. 「Chrome に追加」をクリック
 3. インストール完了
 
