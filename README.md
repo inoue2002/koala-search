@@ -1,4 +1,4 @@
-[![Chrome ウェブストアからインストール](StoreLogo.png)](https://chromewebstore.google.com/detail/%E9%96%A2%E5%A4%A7%E5%9B%B3%E6%9B%B8%E9%A4%A8%E6%A4%9C%E7%B4%A2/lachkpnbdncfhjpajficgejkpnkdiljp?hl=ja)
+[![Chrome ウェブストアからインストール](storeLogo.png)](https://chromewebstore.google.com/detail/%E9%96%A2%E5%A4%A7%E5%9B%B3%E6%9B%B8%E9%A4%A8%E6%A4%9C%E7%B4%A2/lachkpnbdncfhjpajficgejkpnkdiljp?hl=ja)
 
 # 関大図書館検索 Chrome 拡張機能
 
