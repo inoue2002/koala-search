@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "関大図書館検索",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "ISBNから関大図書館の蔵書を検索します",
-  "permissions": ["activeTab", "storage", "scripting", "webRequest", "webRequestBlocking", "cookies"],
+  "permissions": ["activeTab", "storage", "cookies"],
   "host_permissions": [
     "https://www.lib.kansai-u.ac.jp/*",
     "https://www.amazon.co.jp/*",
